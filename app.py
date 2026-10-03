@@ -20,7 +20,7 @@ if "GEMINI_API_KEY" in st.secrets:
     user_prompt = st.text_input("আপনার প্রশ্ন এখানে লিখুন...")
     if user_prompt:
         try:
-            model = genai.GenerativeModel("gemini-pro")
+            model = genai.GenerativeModel("gemini-1.5-flash")
             response = model.generate_content(user_prompt)
             st.write("### উত্তর:")
             st.write(response.text)
