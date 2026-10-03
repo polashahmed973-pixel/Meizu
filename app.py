@@ -1,4 +1,12 @@
-import google.generativeai as genai
+import sys
+import subprocess
+
+try:
+    import google.generativeai as genai
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "google-generativeai"])
+    import google.generativeai as genai
+
 import streamlit as st
 
 # Page configuration
