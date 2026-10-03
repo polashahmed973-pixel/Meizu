@@ -1,30 +1,22 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
-# Page Configuration
-st.set_page_config(
-    page_title="Meizu AI Assistant",
-    page_icon="🤖",
-    layout="centered"
-)
-
-# App Title & Interface
 st.title("🤖 Meizu AI Assistant")
 st.write("আপনার পার্সোনাল এআই অ্যাসিস্ট্যান্টে স্বাগতম!")
 
-# API Key Configuration
 if "GEMINI_API_KEY" in st.secrets:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
     
-    # Simple chat input
     user_prompt = st.text_input("আপনার প্রশ্ন এখানে লিখুন...")
     if user_prompt:
         try:
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content(user_prompt)
+            response = client.models.generate_content(
+                model="gemini-1.5-flash",
+                contents=user_prompt,
+            )
             st.write("### উত্তর:")
             st.write(response.text)
         except Exception as e:
-            st.error(e)
+            st.error(f"ত্রুটি দেখা দিয়েছে: {e}")
 else:
-    st.warning("অনুগ্রহ করে Streamlit Secrets-এ আপনার GEMINI_API_KEY কনফিগার করুন।")
+    st.warning("দয়া করে স্ট্রিমলিট সিক্রেটসে 'GEMINI_API_KEY' যুক্ত করুন।")
