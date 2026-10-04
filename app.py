@@ -1,9 +1,9 @@
 import streamlit as st
 
-# ১. পেজ কনফিগারেশন ও ব্রাউজার ট্যাবে নাম এবং ইউনিক স্পার্কল আইকন সেটআপ
+# ১. পেজ কনফিগারেশন ও ব্রাউজার ট্যাবে নাম এবং আইকন সেটআপ
 st.set_page_config(
     page_title="Meizu",
-    page_icon="🌟",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
@@ -65,7 +65,7 @@ if not st.session_state.authenticated:
     st.stop()
 
 # ৪. মূল অ্যাপ ইন্টারফেস (পাসওয়ার্ড দেওয়ার পর যা দেখা যাবে)
-st.markdown("<h1>🌟 Meizu</h1>", unsafe_allow_html=True)
+st.markdown("<h1>🤖 Meizu</h1>", unsafe_allow_html=True)
 st.markdown(
     "<p style='text-align: center; color: #8b949e;'>ফিউচারস্টিক পার্সোনাল এআই অ্যাসিস্ট্যান্ট</p>",
     unsafe_allow_html=True,
@@ -73,7 +73,7 @@ st.markdown(
 st.divider()
 
 # চ্যাট ইন্টারফেস বা অ্যাসিস্ট্যান্টের মূল অংশ
-st.chat_message("assistant", avatar="🌟").write(
+st.chat_message("assistant", avatar="🤖").write(
     "হ্যালো বস! আমি **Meizu**। আপনার জব, ফুড ইন্ডাস্ট্রি প্রফেশনাল গাইডলাইন, মাইক্রোসফট এক্সেল, এবং অটোমেশন কাজের জন্য প্রস্তুত। বলুন আজ কী করতে হবে?"
 )
 
@@ -81,6 +81,6 @@ st.chat_message("assistant", avatar="🌟").write(
 user_prompt = st.chat_input("আপনার কমান্ড বা প্রশ্ন এখানে লিখুন...")
 if user_prompt:
     st.chat_message("user").write(user_prompt)
-    st.chat_message("assistant", avatar="🌟").write(
+    st.chat_message("assistant", avatar="🤖").write(
         f"আপনার কমান্ডটি গ্রহণ করা হয়েছে: '{user_prompt}'। এটি প্রসেস করা হচ্ছে..."
     )
