@@ -32,7 +32,7 @@ st.markdown(
         border-radius: 8px;
     }
     </style>
-""",
+    """,
     unsafe_allow_html=True,
 )
 
@@ -43,13 +43,11 @@ if "authenticated" not in st.session_state:
 if not st.session_state.authenticated:
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown(
-        "<h2 style='text-align: center; color: #58a6ff;'>🔒 Meizu Security"
-        " Portal</h2>",
+        "<h2 style='text-align: center; color: #58a6ff;'>🔒 Meizu Security Portal</h2>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        "<p style='text-align: center; color: #8b949e;'>Enter your security"
-        " key to access the assistant.</p>",
+        "<p style='text-align: center; color: #8b949e;'>Enter your security key to access the assistant.</p>",
         unsafe_allow_html=True,
     )
 
@@ -69,23 +67,20 @@ if not st.session_state.authenticated:
 # ৪. মূল অ্যাপ ইন্টারফেস (পাসওয়ার্ড দেওয়ার পর যা দেখা যাবে)
 st.markdown("<h1>🌟 Meizu</h1>", unsafe_allow_html=True)
 st.markdown(
-    "<p style='text-align: center; color: #8b949e;'>"
-    "ফিউচারস্টিক পার্সোনাল এআই অ্যাসিস্ট্যান্ট</p>",
+    "<p style='text-align: center; color: #8b949e;'>ফিউচারস্টিক পার্সোনাল এআই অ্যাসিস্ট্যান্ট</p>",
     unsafe_allow_html=True,
 )
 st.divider()
 
 # চ্যাট ইন্টারফেস বা অ্যাসিস্ট্যান্টের মূল অংশ
 st.chat_message("assistant", avatar="🌟").write(
-    "হ্যালো বস! আমি **Meizu**। আপনার জব, ফুড ইন্ডাস্ট্রি প্রফেশনাল গাইডলাইন,"
-    " মাইক্রোসফট এক্সেল, এবং অটোমেশন কাজের জন্য প্রস্তুত। বলুন আজ কী করতে হবে?"
+    "হ্যালো বস! আমি **Meizu**। আপনার জব, ফুড ইন্ডাস্ট্রি প্রফেশনাল গাইডলাইন, মাইক্রোসফট এক্সেল, এবং অটোমেশন কাজের জন্য প্রস্তুত। বলুন আজ কী করতে হবে?"
 )
 
 # ইউজারের চ্যাট ইনপুট
 user_prompt = st.chat_input("আপনার কমান্ড বা প্রশ্ন এখানে লিখুন...")
 if user_prompt:
-  st.chat_message("user").write(user_prompt)
-  # এখানে এআই রেসপন্স বা প্রসেসিং লজিক যুক্ত হবে
-  st.chat_message("assistant", avatar="🌟").write(
-      f"আপনার কমান্ডটি গ্রহণ করা হয়েছে: '{user_prompt}'। এটি প্রসেস করা হচ্ছে..."
-  )
+    st.chat_message("user").write(user_prompt)
+    st.chat_message("assistant", avatar="🌟").write(
+        f"আপনার কমান্ডটি গ্রহণ করা হয়েছে: '{user_prompt}'। এটি প্রসেস করা হচ্ছে..."
+    )
