@@ -11,7 +11,7 @@ if "GEMINI_API_KEY" in st.secrets:
     if user_prompt:
         try:
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-2.0-flash",
                 contents=user_prompt,
             )
             st.write("### উত্তর:")
