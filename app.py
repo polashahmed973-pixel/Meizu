@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ২. নিখুঁত ডার্ক থিম এবং ইনপুট ভিজিবিলিটি ফিক্স (CSS)
+# ২. সুনির্দিষ্ট এবং পরীক্ষিত ডার্ক থিম ও ভিজিবিলিটি সিএসএস
 st.markdown(
     """
     <style>
@@ -32,7 +32,6 @@ if "messages" not in st.session_state:
 # ৪. পাসওয়ার্ড প্রটেকশন পোর্টাল
 if not st.session_state.authenticated:
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<h2>🛡️ Meizu Security Portal</h2>", unsafe_lock_html=True) if hasattr(st, 'markdown') else None
     st.markdown("<h2>🛡️ Meizu Security Portal</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #8b949e;'>Enter your security key to access your personalized assistant.</p>", unsafe_allow_html=True)
     
@@ -72,7 +71,7 @@ else:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        # কাস্টম দৃশ্যমান টেক্সট ইনপুট ও সেন্ড বাটন (স্থায়ী সমাধান)
+        # স্থায়ী এবং দৃশ্যমান ফর্ম ইনপুট
         with st.form(key="chat_form", clear_on_submit=True):
             user_input = st.text_input("Type your message here...", placeholder="Ask Meizu anything or paste text to summarize...", label_visibility="collapsed")
             submit_button = st.form_submit_button(label="Send Message 🚀")
