@@ -1,4 +1,5 @@
 import streamlit as st
+import google.generativeai as genai
 
 # ১. পেজ কনফিগারেশন
 st.set_page_config(
@@ -8,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ২. সুনির্দিষ্ট এবং পরীক্ষিত ডার্ক থিম ও ভিজিবিলিটি সিএসএস
+# ২. ডার্ক থিম ও স্টাইলিং (CSS)
 st.markdown(
     """
     <style>
@@ -50,8 +51,12 @@ else:
     st.markdown("<p style='text-align: center; color: #8b949e;'>Your Personal Career, Food Industry, & Smart Automation Expert</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-    # সাইডবার মোড
+    # সাইডবার মোড এবং এপিআই কি কনফিগারেশন
     st.sidebar.markdown("### 🎛️ Meizu Control Center")
+    
+    # সিক্রেট বা সাইডবার থেকে জেমিনি এপিআই কি নেওয়ার ব্যবস্থা
+    api_key_input = st.sidebar.text_input("Gemini API Key", type="password", placeholder="AIzaSy...")
+    
     assistant_mode = st.sidebar.selectbox(
         "Select Mode:",
         ["General AI & Free Search", "Food & Dairy Career Hub", "Excel & Skills Guide", "Email & WhatsApp Automation"]
@@ -64,7 +69,7 @@ else:
     # ৬. মোড অনুযায়ী কার্যপরিধি
     if assistant_mode == "General AI & Free Search":
         st.markdown("### 💬 Chat & Free Source Search / Summarizer")
-        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, ফ্রি সোর্স থেকে তথ্য খুঁজে সামারি ও উত্তর দেওয়া হবে।")
+        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, জেমিনি এপিআই থেকে রিয়েল-টাইম উত্তর দেওয়া হবে।")
         
         # চ্যাট হিস্ট্রি প্রদর্শন
         for message in st.session_state.messages:
@@ -78,7 +83,19 @@ else:
 
         if submit_button and user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
-            response = f"মেইজু ফ্রি সোর্স থেকে খুঁজে আপনার উত্তর তৈরি করেছে: আপনি জানতে চেয়েছেন '{user_input}' সম্পর্কে।"
+            
+            # জেমিনি এপিআই কল করার লজিক
+            if api_key_input:
+                try:
+                    genai.configure(api_key=api_key_input)
+                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    ai_response = model.generate_content(user_input)
+                    response = ai_response.text
+                except Exception as e:
+                    response = f"⚠️ এপিআই কানেক্ট করতে সমস্যা হয়েছে: {e}"
+            else:
+                response = "⚠️ অনুগ্রহ করে সাইডবারে আপনার জেমিনি এপিআই কি (Gemini API Key) প্রদান করুন।"
+
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
 
