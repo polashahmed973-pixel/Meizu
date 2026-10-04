@@ -82,9 +82,11 @@ else:
             st.session_state.messages.append({"role": "user", "content": user_input})
             
             try:
-                # স্ট্রিমলিট সিক্রেটস থেকে সরাসরি এপিআই কি নেওয়া হচ্ছে
+                # সিক্রেটস থেকে কি ফেচ করা
                 api_key = st.secrets["GEMINI_API_KEY"]
+                # নিরাপদ ও ভ্যালিড এন্ডপয়েন্ট ইউআরএল
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+                
                 payload = {
                     "contents": [{
                         "parts": [{"text": user_input}]
@@ -99,7 +101,7 @@ else:
                     res_data = json.loads(response_obj.read().decode('utf-8'))
                     response = res_data['candidates'][0]['content']['parts'][0]['text']
             except Exception as e:
-                response = f"⚠️ এপিআই কানেক্ট করতে সমস্যা হয়েছে। দয়া করে স্ট্রিমলিটের Secrets অপশনে GEMINI_API_KEY সঠিকভাবে দেওয়া আছে কিনা চেক করুন। (ত্রুটি: {e})"
+                response = f"⚠️ এপিআই কানেক্ট করতে সমস্যা হয়েছে। দয়া করে আপনার স্ট্রিমলিট সিক্রেটস (Secrets) চেক করুন। (ত্রুটি বিবরণ: {e})"
 
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
