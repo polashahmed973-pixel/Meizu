@@ -52,10 +52,8 @@ else:
     st.markdown("<p style='text-align: center; color: #8b949e;'>Your Personal Career, Food Industry, & Smart Automation Expert</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-    # সাইডবার মোড এবং এপিআই কি কনফিগারেশন
+    # সাইডবার মোড
     st.sidebar.markdown("### 🎛️ Meizu Control Center")
-    api_key_input = st.sidebar.text_input("Gemini API Key", type="password", placeholder="AIzaSy...")
-    
     assistant_mode = st.sidebar.selectbox(
         "Select Mode:",
         ["General AI & Free Search", "Food & Dairy Career Hub", "Excel & Skills Guide", "Email & WhatsApp Automation"]
@@ -68,7 +66,7 @@ else:
     # ৬. মোড অনুযায়ী কার্যপরিধি
     if assistant_mode == "General AI & Free Search":
         st.markdown("### 💬 Chat & Free Source Search / Summarizer")
-        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, জেমিনি এপিআই থেকে উত্তর দেওয়া হবে।")
+        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, মেইজু সরাসরি উত্তর দিবে।")
         
         # চ্যাট হিস্ট্রি প্রদর্শন
         for message in st.session_state.messages:
@@ -83,26 +81,25 @@ else:
         if submit_button and user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
             
-            if api_key_input:
-                try:
-                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key_input}"
-                    payload = {
-                        "contents": [{
-                            "parts": [{"text": user_input}]
-                        }]
-                    }
-                    req = urllib.request.Request(
-                        url,
-                        data=json.dumps(payload).encode('utf-8'),
-                        headers={'Content-Type': 'application/json'}
-                    )
-                    with urllib.request.urlopen(req) as response_obj:
-                        res_data = json.loads(response_obj.read().decode('utf-8'))
-                        response = res_data['candidates'][0]['content']['parts'][0]['text']
-                except Exception as e:
-                    response = f"⚠️ এপিআই কল করতে সমস্যা হয়েছে: {e}"
-            else:
-                response = "⚠️ অনুগ্রহ করে সাইডবারে আপনার জেমিনি এপিআই কি (Gemini API Key) প্রদান করুন।"
+            try:
+                # স্ট্রিমলিট সিক্রেটস থেকে সরাসরি এপিআই কি নেওয়া হচ্ছে
+                api_key = st.secrets["GEMINI_API_KEY"]
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{
+                        "parts": [{"text": user_input}]
+                    }]
+                }
+                req = urllib.request.Request(
+                    url,
+                    data=json.dumps(payload).encode('utf-8'),
+                    headers={'Content-Type': 'application/json'}
+                )
+                with urllib.request.urlopen(req) as response_obj:
+                    res_data = json.loads(response_obj.read().decode('utf-8'))
+                    response = res_data['candidates'][0]['content']['parts'][0]['text']
+            except Exception as e:
+                response = f"⚠️ এপিআই কানেক্ট করতে সমস্যা হয়েছে। দয়া করে স্ট্রিমলিটের Secrets অপশনে GEMINI_API_KEY সঠিকভাবে দেওয়া আছে কিনা চেক করুন। (ত্রুটি: {e})"
 
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
