@@ -3,18 +3,19 @@ import streamlit as st
 # ১. পেজ কনফিগারেশন ও মোবাইল ফ্রেন্ডলি PWA মেটা ট্যাগ
 st.set_page_config(
     page_title="Meizu AI Assistant",
-    page_icon="🛡️️",
+    page_icon="🛡",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# ২. প্রিমিয়াম ডার্ক থিম এবং স্টাইলিং (CSS)
+# ২. প্রিমিয়াম ডার্ক থিম এবং স্টাইলিং (ইনপুট টেক্সট কালার দৃশ্যমান করার জন্য ফিক্সড)
 st.markdown(
     """
     <style>
     .stApp { background-color: #0d1117; color: #e6edf3; }
     h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #58a6ff; text-align: center; }
-    .stTextInput input, .stTextArea textarea { background-color: #161b22; color: #ffffff; border: 1px solid #30363d; border-radius: 8px; }
+    .stTextInput input, .stTextArea textarea { background-color: #161b22 !important; color: #ffffff !important; border: 1px solid #30363d !important; border-radius: 8px !important; }
+    .stChatInput input { color: #ffffff !important; }
     .stButton button { background-color: #238636; color: white; border-radius: 8px; width: 100%; font-weight: bold; }
     .stButton button:hover { background-color: #2ea043; }
     .card { background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d; margin-bottom: 15px; }
