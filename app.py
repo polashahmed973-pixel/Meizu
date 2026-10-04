@@ -1,5 +1,6 @@
 import streamlit as st
-import google.generativeai as genai
+import urllib.request
+import json
 
 # ১. পেজ কনফিগারেশন
 st.set_page_config(
@@ -53,8 +54,6 @@ else:
 
     # সাইডবার মোড এবং এপিআই কি কনফিগারেশন
     st.sidebar.markdown("### 🎛️ Meizu Control Center")
-    
-    # সিক্রেট বা সাইডবার থেকে জেমিনি এপিআই কি নেওয়ার ব্যবস্থা
     api_key_input = st.sidebar.text_input("Gemini API Key", type="password", placeholder="AIzaSy...")
     
     assistant_mode = st.sidebar.selectbox(
@@ -69,7 +68,7 @@ else:
     # ৬. মোড অনুযায়ী কার্যপরিধি
     if assistant_mode == "General AI & Free Search":
         st.markdown("### 💬 Chat & Free Source Search / Summarizer")
-        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, জেমিনি এপিআই থেকে রিয়েল-টাইম উত্তর দেওয়া হবে।")
+        st.info("বাংলা বা ইংরেজিতে যেকোনো প্রশ্ন করুন, জেমিনি এপিআই থেকে উত্তর দেওয়া হবে।")
         
         # চ্যাট হিস্ট্রি প্রদর্শন
         for message in st.session_state.messages:
@@ -84,15 +83,24 @@ else:
         if submit_button and user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
             
-            # জেমিনি এপিআই কল করার লজিক
             if api_key_input:
                 try:
-                    genai.configure(api_key=api_key_input)
-                    model = genai.GenerativeModel('gemini-1.5-flash')
-                    ai_response = model.generate_content(user_input)
-                    response = ai_response.text
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key_input}"
+                    payload = {
+                        "contents": [{
+                            "parts": [{"text": user_input}]
+                        }]
+                    }
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(payload).encode('utf-8'),
+                        headers={'Content-Type': 'application/json'}
+                    )
+                    with urllib.request.urlopen(req) as response_obj:
+                        res_data = json.loads(response_obj.read().decode('utf-8'))
+                        response = res_data['candidates'][0]['content']['parts'][0]['text']
                 except Exception as e:
-                    response = f"⚠️ এপিআই কানেক্ট করতে সমস্যা হয়েছে: {e}"
+                    response = f"⚠️ এপিআই কল করতে সমস্যা হয়েছে: {e}"
             else:
                 response = "⚠️ অনুগ্রহ করে সাইডবারে আপনার জেমিনি এপিআই কি (Gemini API Key) প্রদান করুন।"
 
