@@ -1,91 +1,91 @@
 import streamlit as st
-from google import genai
 
-# পেজ কনফিগারেশন
+# ১. পেজ কনফিগারেশন ও ব্রাউজার ট্যাবে নাম এবং ইউনিক স্পার্কল আইকন সেটআপ
 st.set_page_config(
-    page_title="Meizu AI Assistant",
-    page_icon="🤖",
-    layout="centered"
+    page_title="Meizu",
+    page_icon="🌟",
+    layout="centered",
+    initial_sidebar_state="collapsed",
 )
 
-# ১. সিকিউরিটি পাসওয়ার্ড চেক (আপনার দেওয়া পাসওয়ার্ড: sp281018)
-def check_password():
-    def password_entered():
-        # স্ট্রিমলিট সিক্রেটস থেকে পাসওয়ার্ড চেক করবে, না থাকলে আপনার দেওয়া পাসওয়ার্ড ডিফল্ট ধরবে
-        correct_password = st.secrets.get("APP_PASSWORD", "sp281018")
-        if st.session_state["password"] == correct_password:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
+# ২. প্রিমিয়াম ও ফিউচারস্টিক ডিজাইন দেওয়ার জন্য কাস্টম CSS স্টাইল
+st.markdown(
+    """
+    <style>
+    /* ব্যাকগ্রাউন্ড ও টেক্সট স্টাইল */
+    .stApp {
+        background-color: #0d1117;
+        color: #e6edf3;
+    }
+    /* হেডিং ডিজাইন */
+    h1 {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #58a6ff;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+    /* পাসওয়ার্ড ইনপুট বক্স ডিজাইন */
+    .stTextInput input {
+        background-color: #161b22;
+        color: #ffffff;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
-    if "password_correct" not in st.session_state:
-        st.markdown("### 🔐 Meizu সিকিউরিটি লক")
-        st.text_input("আপনার গোপন পাসওয়ার্ড দিন:", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.markdown("### 🔐 Meizu সিকিউরিটি লক")
-        st.text_input("আপনার গোপন পাসওয়ার্ড দিন:", type="password", on_change=password_entered, key="password")
-        st.error("😕 পাসওয়ার্ড ভুল হয়েছে! সঠিক পাসওয়ার্ড দিন (sp281018)")
-        return False
-    else:
-        return True
+# ৩. পাসওয়ার্ড প্রটেকশন লজিক (পাসওয়ার্ড: sp281018)
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-# পাসওয়ার্ড সঠিক হলে মূল অ্যাপ রান করবে
-if check_password():
-    st.title("🤖 Meizu AI Assistant")
-    st.markdown("##### আপনার পার্সোনাল জব, ফুড ইন্ডাস্ট্রি, স্কিল ডেভেলপমেন্ট ও অটোমেশন অ্যাসিস্ট্যান্ট")
+if not st.session_state.authenticated:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown(
+        "<h2 style='text-align: center; color: #58a6ff;'>🔒 Meizu Security"
+        " Portal</h2>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='text-align: center; color: #8b949e;'>Enter your security"
+        " key to access the assistant.</p>",
+        unsafe_allow_html=True,
+    )
 
-    if "GEMINI_API_KEY" in st.secrets:
-        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-        
-        # চ্যাট হিস্ট্রি ধরে রাখার জন্য
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
-            # সিস্টেম প্রম্পট বা নির্দেশিকা সেট করা
-            st.session_state.messages.append({
-                "role": "assistant", 
-                "content": "হ্যালো বস! আমি Meizu। আপনার জব, ফুড ইন্ডাস্ট্রি প্রফেশনাল গাইডলাইন, মাইক্রোসফট এক্সেল এবং স্কিল ডেভেলপমেন্টে সাহায্য করার জন্য আমি পুরোপুরি প্রস্তুত। এছাড়া WhatsApp-এ মেসেজ পাঠানো/পড়া, কল করা বা ক্যালেন্ডার রিমাইন্ডার সেট করার মতো যেকোনো পার্সোনাল কাজের ক্ষেত্রে আমি সবসময় আপনার পারমিশন নিয়ে কাজ করব। বলুন আজ কী করতে হবে?"
-            })
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        password = st.text_input(
+            "Password", type="password", label_visibility="collapsed"
+        )
+        if st.button("Unlock Meizu", use_container_width=True):
+            if password == "sp281018":
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।")
+    st.stop()
 
-        # আগের চ্যাটগুলো স্ক্রিনে দেখানোর জন্য
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+# ৪. মূল অ্যাপ ইন্টারফেস (পাসওয়ার্ড দেওয়ার পর যা দেখা যাবে)
+st.markdown("<h1>🌟 Meizu</h1>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='text-align: center; color: #8b949e;'>"
+    "ফিউচারস্টিক পার্সোনাল এআই অ্যাসিস্ট্যান্ট</p>",
+    unsafe_allow_html=True,
+)
+st.divider()
 
-        # নিচে ফিক্সড চ্যাট ইনপুট বক্স
-        if prompt := st.chat_input("আপনার কমান্ড বা প্রশ্ন এখানে লিখুন..."):
-            # ইউজারের মেসেজ যোগ করা
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
+# চ্যাট ইন্টারফেস বা অ্যাসিস্ট্যান্টের মূল অংশ
+st.chat_message("assistant", avatar="🌟").write(
+    "হ্যালো বস! আমি **Meizu**। আপনার জব, ফুড ইন্ডাস্ট্রি প্রফেশনাল গাইডলাইন,"
+    " মাইক্রোসফট এক্সেল, এবং অটোমেশন কাজের জন্য প্রস্তুত। বলুন আজ কী করতে হবে?"
+)
 
-            # এআই-এর জন্য প্রফেশনাল কনটেক্সট বা সিস্টেম ইন্সট্রাকশন
-            system_instruction = (
-                "You are 'Meizu', a highly secure, personalized AI assistant built exclusively for your owner. "
-                "You specialize in your owner's job, food industry expertise, Microsoft Excel learning, and skill development. "
-                "CRITICAL RULES: "
-                "1. For any personal or sensitive actions like reading/sending WhatsApp messages, checking emails, setting calendar reminders, or making calls, "
-                "you MUST ask for explicit permission first before proceeding. "
-                "2. When the user asks to send or read WhatsApp messages, manage calls, or handle calendar tasks, acknowledge the request, verify the details, ask for confirmation/permission, and guide them accordingly."
-            )
-
-            # জেমিনির কাছ থেকে উত্তর আনা
-            try:
-                # ফুল চ্যাট কনটেক্সটসহ রিকোয়েস্ট পাঠানো
-                response = client.models.generate_content(
-                    model="gemini-3.8-flash",
-                    contents=f"{system_instruction}\n\nUser Query: {prompt}",
-                )
-                ai_response = response.text
-                
-                # এআই-এর উত্তর যোগ করা
-                st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                with st.chat_message("assistant"):
-                    st.markdown(ai_response)
-                    
-            except Exception as e:
-                error_msg = f"ত্রুটি দেখা দিয়েছে: {e}"
-                st.error(error_msg)
-    else:
-        st.warning("দয়া করে স্ট্রিমলিট সিক্রেটসে 'GEMINI_API_KEY' যুক্ত করুন।")
+# ইউজারের চ্যাট ইনপুট
+user_prompt = st.chat_input("আপনার কমান্ড বা প্রশ্ন এখানে লিখুন...")
+if user_prompt:
+  st.chat_message("user").write(user_prompt)
+  # এখানে এআই রেসপন্স বা প্রসেসিং লজিক যুক্ত হবে
+  st.chat_message("assistant", avatar="🌟").write(
+      f"আপনার কমান্ডটি গ্রহণ করা হয়েছে: '{user_prompt}'। এটি প্রসেস করা হচ্ছে..."
+  )
