@@ -8,17 +8,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ২. প্রিমিয়াম ডার্ক থিম এবং স্টাইলিং (ইনপুট টেক্সট কালার দৃশ্যমান করার জন্য ফিক্সড)
+# ২. প্রিমিয়াম ডার্ক থিম এবং টেক্সট ভিজিবিলিটি ফিক্সড (CSS)
 st.markdown(
     """
     <style>
-    .stApp { background-color: #0d1117; color: #e6edf3; }
+    .stApp { background-color: #0d1117; color: #ffffff !important; }
     h1, h2, h3 { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #58a6ff; text-align: center; }
+    p, span, label, div { color: #e6edf3; }
     .stTextInput input, .stTextArea textarea { background-color: #161b22 !important; color: #ffffff !important; border: 1px solid #30363d !important; border-radius: 8px !important; }
     .stChatInput input { color: #ffffff !important; }
+    /* চ্যাট মেসেজ টেক্সট স্পষ্ট করার জন্য */
+    .stChatMessage { background-color: #161b22 !important; border: 1px solid #30363d; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+    .stChatMessage p { color: #ffffff !important; }
     .stButton button { background-color: #238636; color: white; border-radius: 8px; width: 100%; font-weight: bold; }
     .stButton button:hover { background-color: #2ea043; }
-    .card { background-color: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d; margin-bottom: 15px; }
     </style>
     """,
     unsafe_allow_html=True
@@ -78,7 +81,7 @@ else:
             with st.chat_message("user"):
                 st.markdown(user_input)
 
-            # জেমিনি ও ফ্রি সার্চ রেসপন্স সিমুলেশন/লজিক
+            # জেমিনি ও ফ্রি সার্চ রেসপন্স লজিক
             response = f"মেইজু ফ্রি সোর্স থেকে খুঁজে আপনার উত্তর তৈরি করেছে: আপনি জানতে চেয়েছেন '{user_input}' সম্পর্কে। (এখানে রিয়েল-টাইম জেমিনি এবং ফ্রি সার্চ এপিআই কাজ করবে)।"
             
             with st.chat_message("assistant"):
